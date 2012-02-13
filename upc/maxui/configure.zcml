@@ -6,7 +6,9 @@
     i18n_domain="upc.maxui">
 
   <five:registerPackage package="." initialize=".initialize" />
-
+  
+  <include package=".browser" />
+  
   <genericsetup:registerProfile
       name="default"
       title="upc.maxui"
@@ -15,15 +17,8 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-  <browser:page
-      for="*"
-      name="max_variables.js"
-      class=".browser.MAXJSVariables"
-      permission="zope.Public"
-      />
-
   <adapter
       name="maxusercreator"
-      factory=".oauth2.maxUserCreator" />
+      factory=".utils.maxUserCreator" />
   
 </configure>
