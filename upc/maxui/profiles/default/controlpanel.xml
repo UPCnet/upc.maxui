@@ -11,7 +11,7 @@
         appId="upc.maxui"
         category="Products"
         condition_expr=""
-        icon_expr="string:${portal_url}/discussionitem_icon.gif"
+        icon_expr="string:${portal_url}/simbol_MAX_16.png"
         url_expr="string:${portal_url}/@@maxui-settings"
         visible="True"
         i18n:attributes="title">
