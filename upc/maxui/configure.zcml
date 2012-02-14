@@ -18,7 +18,11 @@
       />
 
   <adapter
+      name="oauthtokenretriever"
+      factory=".max.oauthTokenRetriever" />
+
+  <adapter
       name="maxusercreator"
-      factory=".utils.maxUserCreator" />
+      factory=".max.maxUserCreator" />
   
 </configure>
