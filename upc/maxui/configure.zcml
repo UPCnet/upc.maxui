@@ -6,9 +6,10 @@
     i18n_domain="upc.maxui">
 
   <five:registerPackage package="." initialize=".initialize" />
-  
+
   <include package=".browser" />
-  
+  <include package=".portlets" />
+
   <genericsetup:registerProfile
       name="default"
       title="upc.maxui"
@@ -20,5 +21,5 @@
   <adapter
       name="maxusercreator"
       factory=".utils.maxUserCreator" />
-  
+
 </configure>

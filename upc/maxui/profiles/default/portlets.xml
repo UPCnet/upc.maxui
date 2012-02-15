@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<portlets>
+
+
+    <portletmanager
+         name="upc.maxui"
+         type="upc.maxui.portlets.maxui.IMaxUIPortlet"
+    />
+
+</portlets>
