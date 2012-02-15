@@ -8,7 +8,7 @@
 
 
      <plone:portlet
-         name="upc.maxui"
+         name="upc.maxui.widget"
          interface=".maxui.IMaxUIPortlet"
          assignment=".maxui.Assignment"
          view_permission="zope2.View"

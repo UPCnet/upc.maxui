@@ -10,7 +10,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 #from upc.maxui import rssvideoportletMessageFactory as _
 
 
-class IMaxUI(IPortletDataProvider):
+class IMaxUIPortlet(IPortletDataProvider):
     """A portlet
 
     It inherits from IPortletDataProvider because for this portlet, the

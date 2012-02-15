@@ -9,10 +9,11 @@
 
   <include package=".browser" />
   <include package=".portlets" />
+  <include file="skins.zcml" />
 
   <genericsetup:registerProfile
       name="default"
-      title="upc.maxui"
+      title="UPC Max UI"
       directory="profiles/default"
       description="Installs the upc.maxui package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
