@@ -5,19 +5,24 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="upc.maxui">
 
-  <browser:page
-      for="*"
-      name="max_variables.js"
-      class=".variables.MAXJSVariables"
-      permission="zope.Public"
-      />
-
-    <!-- Control panel -->
-    <browser:page
-        name="maxui-settings"
-        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".controlpanel.MAXUISettingsControlPanel"
-        permission="cmf.ManagePortal"
+    <browser:resource
+        name="simbol_MAX_16.png"
+        image="simbol_MAX_16.png"
         />
+
+    <browser:page
+        for="*"
+        name="max_variables.js"
+        class=".variables.MAXJSVariables"
+        permission="zope.Public"
+        />
+
+      <!-- Control panel -->
+      <browser:page
+          name="maxui-settings"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+          class=".controlpanel.MAXUISettingsControlPanel"
+          permission="cmf.ManagePortal"
+          />
 
 </configure>

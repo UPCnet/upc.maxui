@@ -25,7 +25,7 @@ setup(name='upc.maxui',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'pas.plugins.preauth',
       ],
       entry_points="""
       # -*- Entry points: -*-

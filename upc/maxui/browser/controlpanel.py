@@ -1,27 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from Acquisition import aq_base, aq_inner
-
-from Products.CMFCore.utils import getToolByName
-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.app.registry.browser import controlpanel
 
-from plone.registry.interfaces import IRegistry
-
-from zope.component import getMultiAdapter, queryUtility
-
 from z3c.form import button
-from z3c.form.browser.checkbox import SingleCheckBoxFieldWidget
-
 
 from zope.interface import Interface
 from zope import schema
 
 from upc.maxui import UPCMAXUIMessageFactory as _
+
+DEFAULT_OAUTH_TOKEN_ENDPOINT = 'https://oauth.upc.edu/token'
+DEFAULT_OAUTH_GRANT_TYPE = 'password'
+DEFAULT_MAX_SERVER = 'https://max.beta.upcnet.es'
+DEFAULT_MAX_USERNAME = 'operations'
+DEFAULT_MAX_PASSWORD = 'operations'
 
 
 class IMAXUISettings(Interface):
@@ -29,12 +25,45 @@ class IMAXUISettings(Interface):
     configuration registry and obtainable via plone.registry.
     """
 
-    moderator_email = schema.ASCIILine(
-        title=_(u'label_moderator_email', default=u'Moderator Email Address'),
-        description=_(u'help_moderator_email',
-                        default=u"Address to which moderator notifications "
-                                u"will be sent."),
-        required=False,
+    oauth_token_endpoint = schema.ASCIILine(
+        title=_(u'label_oauth_token_endpoint', default=u'OAuth token endpoint'),
+        description=_(u'help_oauth_token_endpoint',
+                        default=u"Please, specify the URI for the oAuth token "
+                                u"endpoint."),
+        required=True,
+        default=DEFAULT_OAUTH_TOKEN_ENDPOINT
+        )
+
+    oauth_grant_type = schema.ASCIILine(
+        title=_(u'label_oauth_grant_type', default=u'OAuth grant type'),
+        description=_(u'help_oauth_grant_type',
+                        default=u"Please, specify the oAuth grant type."),
+        required=True,
+        default=DEFAULT_OAUTH_GRANT_TYPE
+        )
+
+    max_server = schema.ASCIILine(
+        title=_(u'label_max_server', default=u'MAX Server URL'),
+        description=_(u'help_max_server',
+                        default=u"Please, specify the MAX Server URL."),
+        required=True,
+        default=DEFAULT_MAX_SERVER
+        )
+
+    max_ops_username = schema.ASCIILine(
+        title=_(u'label_max_username', default=u'MAX operations agent username'),
+        description=_(u'help_max_username',
+                        default=u"Please, specify the MAX operations agent url."),
+        required=True,
+        default=DEFAULT_MAX_USERNAME
+        )
+
+    max_ops_password = schema.ASCIILine(
+        title=_(u'label_max_password', default=u'MAX operations agent password'),
+        description=_(u'help_max_password',
+                        default=u"Please, specify the MAX operations agent password."),
+        required=True,
+        default=DEFAULT_MAX_PASSWORD
         )
 
 
@@ -78,65 +107,3 @@ class MAXUISettingsControlPanel(controlpanel.ControlPanelFormWrapper):
     """
     form = MAXUISettingsEditForm
     #index = ViewPageTemplateFile('controlpanel.pt')
-
-    def settings(self):
-        """Compose a string that contains all registry settings that are
-           needed for the MAXUI control panel.
-        """
-        registry = queryUtility(IRegistry)
-        settings = registry.forInterface(IMAXUISettings, check=False)
-        wftool = getToolByName(self.context, "portal_workflow", None)
-        wf = wftool.getChainForPortalType('Discussion Item')
-        output = []
-
-        # Globally enabled
-        if settings.globally_enabled:
-            output.append("globally_enabled")
-
-        # Comment moderation
-        if 'one_state_workflow' not in wf and \
-        'comment_review_workflow' not in wf:
-            output.append("moderation_custom")
-        elif settings.moderation_enabled:
-            output.append("moderation_enabled")
-
-        # Anonymous comments
-        if settings.anonymous_comments:
-            output.append("anonymous_comments")
-
-        # Invalid mail setting
-        ctrlOverview = getMultiAdapter((self.context, self.request),
-                                       name='overview-controlpanel')
-        if ctrlOverview.mailhost_warning():
-            output.append("invalid_mail_setup")
-
-        # Workflow
-        wftool = getToolByName(self.context, 'portal_workflow', None)
-        discussion_workflow = wftool.getChainForPortalType('Discussion Item')[0]
-        if discussion_workflow:
-            output.append(discussion_workflow)
-
-        # Merge all settings into one string
-        return ' '.join(output)
-
-    def mailhost_warning(self):
-        """Returns true if mailhost is not configured properly.
-        """
-        # Copied from plone.app.controlpanel/plone/app/controlpanel/overview.py
-        mailhost = getToolByName(aq_inner(self.context), 'MailHost', None)
-        if mailhost is None:
-            return True
-        mailhost = getattr(aq_base(mailhost), 'smtp_host', None)
-        email = getattr(aq_inner(self.context), 'email_from_address', None)
-        if mailhost and email:
-            return False
-        return True
-
-    def custom_comment_workflow_warning(self):
-        """Returns a warning string if a custom comment workflow is enabled.
-        """
-        wftool = getToolByName(self.context, "portal_workflow", None)
-        wf = wftool.getChainForPortalType('Discussion Item')
-        if 'one_state_workflow' in wf or 'comment_review_workflow' in wf:
-            return
-        return True

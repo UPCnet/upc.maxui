@@ -4,10 +4,15 @@ from zope.publisher.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory as _
 
+from plone.registry.interfaces import IRegistry
+from zope.component import queryUtility
+from upc.maxui.browser.controlpanel import IMAXUISettings
 
 TEMPLATE = """\
 var username = '%(username)s';
 var oauth_token = '%(oauth_token)s';
+var oauth_grant_type = '%(oauth_grant_type)s';
+var max_server = '%(max_server)s';
 """
 
 FORM_MODIFIED = _(u'text_form_modified_message',
@@ -26,6 +31,9 @@ class MAXJSVariables(BrowserView):
         context = self.context
         response = self.request.response
         response.setHeader('content-type', 'text/javascript;;charset=utf-8')
+
+        registry = queryUtility(IRegistry)
+        settings = registry.forInterface(IMAXUISettings, check=False)
 
         pm = getToolByName(context, "portal_membership")
         if pm.isAnonymousUser():  # the user has not logged in
@@ -49,4 +57,6 @@ class MAXJSVariables(BrowserView):
         return TEMPLATE % dict(
             username=username,
             oauth_token=oauth_token,
+            oauth_grant_type=settings.oauth_grant_type,
+            max_server=settings.max_server
         )
