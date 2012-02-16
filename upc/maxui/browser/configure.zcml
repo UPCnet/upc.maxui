@@ -10,6 +10,21 @@
         image="simbol_MAX_16.png"
         />
 
+    <browser:resource
+        name="max.ui.js"
+        file="max.ui.js"
+        />
+
+    <browser:resource
+        name="maxui.loader.js"
+        file="maxui.loader.js"
+        />
+
+    <browser:resource
+        name="max.ui.css"
+        file="max.ui.css"
+        />
+
     <browser:page
         for="*"
         name="max_variables.js"

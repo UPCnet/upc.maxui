@@ -6,12 +6,14 @@
     i18n_domain="upc.maxui">
 
   <five:registerPackage package="." initialize=".initialize" />
-  
+
   <include package=".browser" />
-  
+  <include package=".portlets" />
+  <include file="skins.zcml" />
+
   <genericsetup:registerProfile
       name="default"
-      title="upc.maxui"
+      title="UPC Max UI"
       directory="profiles/default"
       description="Installs the upc.maxui package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
@@ -24,5 +26,4 @@
   <adapter
       name="maxusercreator"
       factory=".max.maxUserCreator" />
-  
 </configure>

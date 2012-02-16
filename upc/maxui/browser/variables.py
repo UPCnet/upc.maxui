@@ -9,10 +9,11 @@ from zope.component import queryUtility
 from upc.maxui.browser.controlpanel import IMAXUISettings
 
 TEMPLATE = """\
-var username = '%(username)s';
-var oauth_token = '%(oauth_token)s';
-var oauth_grant_type = '%(oauth_grant_type)s';
-var max_server = '%(max_server)s';
+if (!window._MAXUI) {window._MAXUI = {}; }
+window._MAXUI.username = '%(username)s';
+window._MAXUI.oauth_token = '%(oauth_token)s';
+window._MAXUI.oauth_grant_type = '%(oauth_grant_type)s';
+window._MAXUI.max_server = '%(max_server)s';
 """
 
 FORM_MODIFIED = _(u'text_form_modified_message',

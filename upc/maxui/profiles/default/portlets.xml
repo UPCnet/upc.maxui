@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<portlets>
+
+ <portlet
+   addview="upc.maxui.widget"
+   title="UPC MaxUI Portlet"
+   description="UPC MaxUI Portlet to host the activitystream widget"
+   />
+
+</portlets>
