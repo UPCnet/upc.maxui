@@ -25,7 +25,6 @@ class oauthTokenRetriever(object):
         password = credentials.get('password')
         registry = queryUtility(IRegistry)
         settings = registry.forInterface(IMAXUISettings, check=False)
-
         if user == "admin":
             return
 
@@ -45,7 +44,7 @@ class oauthTokenRetriever(object):
         member = pm.getMemberById(user)
         member.setMemberProperties({'oauth_token': oauth_token})
 
-        logger.info('oAuth token set for user: ' % user)
+        logger.info('oAuth token set for user: %s ' % user)
 
 
 class maxUserCreator(object):
@@ -71,7 +70,7 @@ class maxUserCreator(object):
                           data=payload,
                           verify=False)
 
-        if r.status_code == 200 or r.status_code == 201:
-            logger.info('MAX user created for user: ' % user)
+        if r.status_code in [200,201]:
+            logger.info('MAX user created for user: %' % user)
         else:
-            logger.info('Error creating MAX user for user: ' % user)
+            logger.info('Error creating MAX user for user: %' % user)

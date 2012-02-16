@@ -38,12 +38,13 @@ class MAXJSVariables(BrowserView):
 
         pm = getToolByName(context, "portal_membership")
         if pm.isAnonymousUser():  # the user has not logged in
-            username = 'Anonymous'
+            username = ''
+            oauth_token = ''
         else:
             member = pm.getAuthenticatedMember()
             username = member.getUserName()
-        member = pm.getMemberById(username)
-        oauth_token = member.getProperty('oauth_token', None)
+            member = pm.getMemberById(username)
+            oauth_token = member.getProperty('oauth_token', None)
 
         # Per si de cas les necessitem
         # form_modified = translate(FORM_MODIFIED, context=self.request)

@@ -12,8 +12,7 @@ window._MAXUI.onReady = function() {
     // This is called when the code has loaded.
     settings = {'newActivityText' : 'Escriu alguna cosa ...',
                 'username' : _MAXUI.username,
-                'oauthToken' : _MAXUI.oauth_token,
-                'oauthGrantType' : _MAXUI.oauth_grant_type,
+                'oAuthToken' : _MAXUI.oauth_token,
                 'maxServerURL' : _MAXUI.max_server
                }
 
