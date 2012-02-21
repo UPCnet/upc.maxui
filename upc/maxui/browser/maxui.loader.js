@@ -13,7 +13,8 @@ window._MAXUI.onReady = function() {
     settings = {'newActivityText' : 'Escriu alguna cosa ...',
                 'username' : _MAXUI.username,
                 'oAuthToken' : _MAXUI.oauth_token,
-                'maxServerURL' : _MAXUI.max_server
+                'maxServerURL' : _MAXUI.max_server,
+                'avatarURLpattern' : _MAXUI.avatar_url
                }
 
     $('#maxui-widget-container').maxUI(settings)

@@ -26,7 +26,7 @@
         />
 
     <browser:page
-        for="*"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         name="max_variables.js"
         class=".variables.MAXJSVariables"
         permission="zope.Public"
