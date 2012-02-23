@@ -6,6 +6,7 @@ from zope.interface import implements
 from zope.component import adapts
 
 from upc.maxui.browser.controlpanel import IMAXUISettings
+from upc.maxclient import MaxClient
 
 import requests
 import json
@@ -70,14 +71,13 @@ class maxUserCreator(object):
         if user == "admin":
             return
 
-        payload = {}
+        max = MaxClient(settings.max_server, auth_method="basic")
+        max.setBasicAuth(settings.max_ops_username, settings.max_ops_password)
+        result = max.addUser(user)
 
-        r = requests.post('%s/people/%s' % (settings.max_server, user),
-                          auth=(settings.max_ops_username, settings.max_ops_password),
-                          data=payload,
-                          verify=False)
-
-        if r.status_code in [200,201]:
-            logger.info('MAX user created for user: %' % user)
+        if not result:
+            logger.info('Error creating MAX user for user: %s' % user)
         else:
-            logger.info('Error creating MAX user for user: %' % user)
+            logger.info('MAX user created for user: %s' % user)
+            max.setActor(user)
+            max.subscribe(getToolByName(self.context, "portal_url").getPortalObject().absolute_url())
