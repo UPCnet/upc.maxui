@@ -14,6 +14,7 @@ window._MAXUI.username = '%(username)s';
 window._MAXUI.oauth_token = '%(oauth_token)s';
 window._MAXUI.oauth_grant_type = '%(oauth_grant_type)s';
 window._MAXUI.max_server = '%(max_server)s';
+window._MAXUI.avatar_url = '%(avatar_url)s';
 """
 
 FORM_MODIFIED = _(u'text_form_modified_message',
@@ -38,12 +39,13 @@ class MAXJSVariables(BrowserView):
 
         pm = getToolByName(context, "portal_membership")
         if pm.isAnonymousUser():  # the user has not logged in
-            username = 'Anonymous'
+            username = ''
+            oauth_token = ''
         else:
             member = pm.getAuthenticatedMember()
             username = member.getUserName()
-        member = pm.getMemberById(username)
-        oauth_token = member.getProperty('oauth_token', None)
+            member = pm.getMemberById(username)
+            oauth_token = member.getProperty('oauth_token', None)
 
         # Per si de cas les necessitem
         # form_modified = translate(FORM_MODIFIED, context=self.request)
@@ -59,5 +61,6 @@ class MAXJSVariables(BrowserView):
             username=username,
             oauth_token=oauth_token,
             oauth_grant_type=settings.oauth_grant_type,
-            max_server=settings.max_server
+            max_server=settings.max_server,
+            avatar_url='%s/avatar/{0}' % (self.context.absolute_url())
         )
