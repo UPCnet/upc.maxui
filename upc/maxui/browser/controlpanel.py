@@ -5,10 +5,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.app.registry.browser import controlpanel
+from plone.registry.interfaces import IRegistry
 
 from z3c.form import button
 
 from zope.interface import Interface
+from zope.component import queryUtility
 from zope import schema
 
 from upc.maxui import UPCMAXUIMessageFactory as _
@@ -16,8 +18,10 @@ from upc.maxui import UPCMAXUIMessageFactory as _
 DEFAULT_OAUTH_TOKEN_ENDPOINT = 'https://oauth.upc.edu/token'
 DEFAULT_OAUTH_GRANT_TYPE = 'password'
 DEFAULT_MAX_SERVER = 'https://max.beta.upcnet.es'
-DEFAULT_MAX_USERNAME = 'operations'
-DEFAULT_MAX_PASSWORD = 'operations'
+DEFAULT_MAX_OPS_USERNAME = 'operations'
+DEFAULT_MAX_OPS_PASSWORD = 'operations'
+DEFAULT_MAX_APP_USERNAME = 'apppass'
+DEFAULT_MAX_APP_PASSWORD = 'apppass'
 
 
 class IMAXUISettings(Interface):
@@ -51,19 +55,42 @@ class IMAXUISettings(Interface):
         )
 
     max_ops_username = schema.ASCIILine(
-        title=_(u'label_max_username', default=u'MAX operations agent username'),
-        description=_(u'help_max_username',
+        title=_(u'label_max_ops_username', default=u'MAX operations agent username'),
+        description=_(u'help_max_ops_username',
                         default=u"Please, specify the MAX operations agent url."),
         required=True,
-        default=DEFAULT_MAX_USERNAME
+        default=DEFAULT_MAX_OPS_USERNAME
         )
 
     max_ops_password = schema.ASCIILine(
-        title=_(u'label_max_password', default=u'MAX operations agent password'),
-        description=_(u'help_max_password',
+        title=_(u'label_max_ops_password', default=u'MAX operations agent password'),
+        description=_(u'help_max_ops_password',
                         default=u"Please, specify the MAX operations agent password."),
         required=True,
-        default=DEFAULT_MAX_PASSWORD
+        default=DEFAULT_MAX_OPS_PASSWORD
+        )
+
+    max_app_username = schema.ASCIILine(
+        title=_(u'label_max_app_username', default=u'MAX application agent username'),
+        description=_(u'help_max_app_username',
+                        default=u"Please, specify the MAX application agent url."),
+        required=True,
+        default=DEFAULT_MAX_APP_USERNAME
+        )
+
+    max_app_password = schema.ASCIILine(
+        title=_(u'label_max_app_password', default=u'MAX application agent password'),
+        description=_(u'help_max_app_password',
+                        default=u"Please, specify the MAX application agent password."),
+        required=True,
+        default=DEFAULT_MAX_APP_PASSWORD
+        )
+
+    max_app_token = schema.ASCIILine(
+        title=_(u'label_max_app_token', default=u'MAX application token'),
+        description=_(u'help_max_app_token',
+                        default=u"Please, specify the MAX application token."),
+        required=False,
         )
 
 
@@ -79,6 +106,7 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
 
     def updateFields(self):
         super(MAXUISettingsEditForm, self).updateFields()
+        self.fields = self.fields.omit('max_app_token')
 
     def updateWidgets(self):
         super(MAXUISettingsEditForm, self).updateWidgets()
@@ -101,9 +129,24 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(),
                                                   self.control_panel_view))
 
+    @button.buttonAndHandler(_(u'Get token'), name='getToken')
+    def handleGetToken(self, action):
+        data, errors = self.extractData()
+        credentials = dict(login=data.get('max_app_username'),
+                           password=data.get('max_app_password'))
+        from upc.maxui.max import getToken
+        oauth_token = getToken(credentials)
+
+        registry = queryUtility(IRegistry)
+        settings = registry.forInterface(IMAXUISettings, check=False)
+
+        settings.max_app_token = str(oauth_token)
+
+        IStatusMessage(self.request).addStatusMessage(_(u"Token for MAX application user saved"), "info")
+
 
 class MAXUISettingsControlPanel(controlpanel.ControlPanelFormWrapper):
     """MAXUI settings control panel.
     """
     form = MAXUISettingsEditForm
-    #index = ViewPageTemplateFile('controlpanel.pt')
+    index = ViewPageTemplateFile('controlpanel.pt')

@@ -12,6 +12,25 @@ import json
 import logging
 
 
+def getToken(credentials):
+    user = credentials.get('login')
+    password = credentials.get('password')
+    registry = queryUtility(IRegistry)
+    settings = registry.forInterface(IMAXUISettings, check=False)
+
+    payload = {"grant_type": settings.oauth_grant_type,
+               "client_id": "MAX",
+               "scope": "widgetcli",
+               "username": user,
+               "password": password
+               }
+
+    ## TODO: Do we need to ask for a token always?
+    r = requests.post(settings.oauth_token_endpoint, data=payload, verify=False)
+    response = json.loads(r.text)
+    return response.get("oauth_token")
+
+
 class oauthTokenRetriever(object):
     implements(IPreauthTask)
     adapts(IPreauthHelper)
@@ -22,23 +41,11 @@ class oauthTokenRetriever(object):
     def execute(self, credentials):
         logger = logging.getLogger('upc.maxui')
         user = credentials.get('login')
-        password = credentials.get('password')
-        registry = queryUtility(IRegistry)
-        settings = registry.forInterface(IMAXUISettings, check=False)
+
         if user == "admin":
             return
 
-        payload = {"grant_type": settings.oauth_grant_type,
-                   "client_id": "MAX",
-                   "scope": "widgetcli",
-                   "username": user,
-                   "password": password
-                   }
-
-        ## TODO: Do we need to ask for a token always?
-        r = requests.post(settings.oauth_token_endpoint, data=payload, verify=False)
-        response = json.loads(r.text)
-        oauth_token = response.get("oauth_token")
+        oauth_token = getToken(credentials)
 
         pm = getToolByName(self.context, "portal_membership")
         member = pm.getMemberById(user)
