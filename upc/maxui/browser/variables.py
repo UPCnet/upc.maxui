@@ -15,6 +15,7 @@ window._MAXUI.oauth_token = '%(oauth_token)s';
 window._MAXUI.oauth_grant_type = '%(oauth_grant_type)s';
 window._MAXUI.max_server = '%(max_server)s';
 window._MAXUI.avatar_url = '%(avatar_url)s';
+window._MAXUI.contexts = %(contexts)s;
 """
 
 FORM_MODIFIED = _(u'text_form_modified_message',
@@ -62,5 +63,6 @@ class MAXJSVariables(BrowserView):
             oauth_token=oauth_token,
             oauth_grant_type=settings.oauth_grant_type,
             max_server=settings.max_server,
-            avatar_url='%s/avatar/{0}' % (self.context.absolute_url())
+            avatar_url='%s/avatar/{0}' % (self.context.absolute_url()),
+            contexts=str([self.context.absolute_url()])
         )
