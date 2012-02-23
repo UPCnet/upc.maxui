@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
-<object name="portal_skins" allow_any="False" cookie_persistence="False"
-   default_skin="GenwebUPC_Neutre3">
+<object name="portal_skins">
 
  <object name="maxui_custom_templates"
     meta_type="Filesystem Directory View"
     directory="upc.maxui:skins/custom_templates"/>
 
- <skin-path name="GenwebUPC_Neutre3" based-on="Plone Default">
+ <skin-path name="*">
   <layer name="maxui_custom_templates"
      insert-after="custom"/>
  </skin-path>

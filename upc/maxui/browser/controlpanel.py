@@ -5,10 +5,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.app.registry.browser import controlpanel
+from plone.registry.interfaces import IRegistry
 
 from z3c.form import button
 
 from zope.interface import Interface
+from zope.component import queryUtility
 from zope import schema
 
 from upc.maxui import UPCMAXUIMessageFactory as _
@@ -84,6 +86,13 @@ class IMAXUISettings(Interface):
         default=DEFAULT_MAX_APP_PASSWORD
         )
 
+    max_app_token = schema.ASCIILine(
+        title=_(u'label_max_app_token', default=u'MAX application token'),
+        description=_(u'help_max_app_token',
+                        default=u"Please, specify the MAX application token."),
+        required=False,
+        )
+
 
 class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
     """MAXUI settings form.
@@ -97,6 +106,7 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
 
     def updateFields(self):
         super(MAXUISettingsEditForm, self).updateFields()
+        self.fields = self.fields.omit('max_app_token')
 
     def updateWidgets(self):
         super(MAXUISettingsEditForm, self).updateWidgets()
@@ -120,11 +130,19 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
                                                   self.control_panel_view))
 
     @button.buttonAndHandler(_(u'Get token'), name='getToken')
-    def handleGetToken(self, action, data):
-        credentials = dict(login=data.max_app_username,
-                           password=data.max_app_password)
+    def handleGetToken(self, action):
+        data, errors = self.extractData()
+        credentials = dict(login=data.get('max_app_username'),
+                           password=data.get('max_app_password'))
         from upc.maxui.max import getToken
         oauth_token = getToken(credentials)
+
+        registry = queryUtility(IRegistry)
+        settings = registry.forInterface(IMAXUISettings, check=False)
+
+        settings.max_app_token = str(oauth_token)
+
+        IStatusMessage(self.request).addStatusMessage(_(u"Token for MAX application user saved"), "info")
 
 
 class MAXUISettingsControlPanel(controlpanel.ControlPanelFormWrapper):
