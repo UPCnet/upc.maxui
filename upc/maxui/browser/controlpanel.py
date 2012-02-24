@@ -15,6 +15,11 @@ from zope import schema
 
 from upc.maxui import UPCMAXUIMessageFactory as _
 
+from upc.maxclient import MaxClient
+import logging
+from Products.CMFCore.utils import getToolByName
+
+
 DEFAULT_OAUTH_TOKEN_ENDPOINT = 'https://oauth.upc.edu/token'
 DEFAULT_OAUTH_GRANT_TYPE = 'password'
 DEFAULT_MAX_SERVER = 'https://max.beta.upcnet.es'
@@ -135,14 +140,32 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
         credentials = dict(login=data.get('max_app_username'),
                            password=data.get('max_app_password'))
         from upc.maxui.max import getToken
-        oauth_token = getToken(credentials)
+        logger = logging.getLogger('upc.maxui')
 
-        registry = queryUtility(IRegistry)
-        settings = registry.forInterface(IMAXUISettings, check=False)
+        #Authenticat to max as operations user
+        maxcli = MaxClient(data.get('max_server'), auth_method="basic")
+        maxcli.setBasicAuth(data.get('max_ops_username'), data.get('max_ops_password'))
 
-        settings.max_app_token = str(oauth_token)
+        #Add App user to max
+        result = maxcli.addUser(credentials['login'])
+        if not result:
+            logger.info('Error creating MAX user for user: %s' % credentials['login'])
+            IStatusMessage(self.request).addStatusMessage(_(u"An error occurred during creation of max user"), "info")
+        else:
+            logger.info('MAX user %s created' % credentials['login'])
+            # Request token for app user
+            oauth_token = getToken(credentials)
+            registry = queryUtility(IRegistry)
+            settings = registry.forInterface(IMAXUISettings, check=False)
+            settings.max_app_token = str(oauth_token)
 
-        IStatusMessage(self.request).addStatusMessage(_(u"Token for MAX application user saved"), "info")
+            #Subscribe app user to max
+            club_url = getToolByName(self.context, "portal_url").getPortalObject().absolute_url()
+            maxcli.setActor(credentials['login'])
+            maxcli.subscribe(club_url)
+
+            logger.info('MAX user %s subscribed to %s' % (credentials['login'], club_url))
+            IStatusMessage(self.request).addStatusMessage(_(u"Token for MAX application user saved"), "info")
 
 
 class MAXUISettingsControlPanel(controlpanel.ControlPanelFormWrapper):

@@ -71,13 +71,13 @@ class maxUserCreator(object):
         if user == "admin":
             return
 
-        max = MaxClient(settings.max_server, auth_method="basic")
-        max.setBasicAuth(settings.max_ops_username, settings.max_ops_password)
-        result = max.addUser(user)
+        # max = MaxClient(settings.max_server, auth_method="basic")
+        # max.setBasicAuth(settings.max_ops_username, settings.max_ops_password)
+        # result = max.addUser(user)
 
-        if not result:
-            logger.info('Error creating MAX user for user: %s' % user)
-        else:
-            logger.info('MAX user created for user: %s' % user)
-            max.setActor(user)
-            max.subscribe(getToolByName(self.context, "portal_url").getPortalObject().absolute_url())
+        # if not result:
+        #     logger.info('Error creating MAX user for user: %s' % user)
+        # else:
+        #     logger.info('MAX user created for user: %s' % user)
+        #     max.setActor(user)
+        #     max.subscribe(getToolByName(self.context, "portal_url").getPortalObject().absolute_url())
