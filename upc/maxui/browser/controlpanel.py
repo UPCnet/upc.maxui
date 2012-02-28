@@ -163,7 +163,7 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
         else:
             logger.info('MAX Agent user %s created' % credentials['login'])
             # Request token for app user
-            oauth_token = getToken(credentials, grant_type='password')
+            oauth_token = getToken(credentials)
             registry = queryUtility(IRegistry)
             settings = registry.forInterface(IMAXUISettings, check=False)
             settings.max_app_token = str(oauth_token)
