@@ -25,7 +25,8 @@ DEFAULT_OAUTH_GRANT_TYPE = 'password'
 DEFAULT_MAX_SERVER = 'https://max.beta.upcnet.es'
 DEFAULT_MAX_OPS_USERNAME = 'operations'
 DEFAULT_MAX_OPS_PASSWORD = 'operations'
-DEFAULT_MAX_APP_USERNAME = 'apppass'
+DEFAULT_MAX_APP_USERNAME = 'appusername'
+DEFAULT_MAX_APP_DISPLAYNAME = 'App Display Name'
 DEFAULT_MAX_APP_PASSWORD = 'apppass'
 
 
@@ -78,7 +79,15 @@ class IMAXUISettings(Interface):
     max_app_username = schema.ASCIILine(
         title=_(u'label_max_app_username', default=u'MAX application agent username'),
         description=_(u'help_max_app_username',
-                        default=u"Please, specify the MAX application agent url."),
+                        default=u"Please, specify the MAX application agent username."),
+        required=True,
+        default=DEFAULT_MAX_APP_USERNAME
+        )
+
+    max_app_displayname = schema.ASCIILine(
+        title=_(u'label_max_app_displayname', default=u'MAX application agent display Name'),
+        description=_(u'help_max_app_displayname',
+                        default=u"Please, specify the MAX application agent display Name."),
         required=True,
         default=DEFAULT_MAX_APP_USERNAME
         )
@@ -147,14 +156,14 @@ class MAXUISettingsEditForm(controlpanel.RegistryEditForm):
         maxcli.setBasicAuth(data.get('max_ops_username'), data.get('max_ops_password'))
 
         #Add App user to max
-        result = maxcli.addUser(credentials['login'])
+        result = maxcli.addUser(credentials['login'], displayName=data.get('max_app_displayname'))
         if not result:
             logger.info('Error creating MAX user for user: %s' % credentials['login'])
             IStatusMessage(self.request).addStatusMessage(_(u"An error occurred during creation of max user"), "info")
         else:
-            logger.info('MAX user %s created' % credentials['login'])
+            logger.info('MAX Agent user %s created' % credentials['login'])
             # Request token for app user
-            oauth_token = getToken(credentials)
+            oauth_token = getToken(credentials, grant_type='password')
             registry = queryUtility(IRegistry)
             settings = registry.forInterface(IMAXUISettings, check=False)
             settings.max_app_token = str(oauth_token)

@@ -16,7 +16,8 @@ window._MAXUI.onReady = function() {
                 'maxServerURL' : _MAXUI.max_server,
                 'avatarURLpattern' : _MAXUI.avatar_url,
                 'activitiesSource' : 'activities',
-                'contextFilter' : _MAXUI.contexts
+                'contextFilter' : _MAXUI.contexts,
+                'activitySource': 'activities'
                }
 
     $('#maxui-widget-container').maxUI(settings)

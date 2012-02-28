@@ -13,13 +13,15 @@ import json
 import logging
 
 
-def getToken(credentials):
+def getToken(credentials, grant_type=None):
     user = credentials.get('login')
     password = credentials.get('password')
     registry = queryUtility(IRegistry)
     settings = registry.forInterface(IMAXUISettings, check=False)
+    # Pick grant type from settings unless passed as optonal argument
+    effective_grant_type = grant_type != None and grant_type or settings.oauth_grant_type
 
-    payload = {"grant_type": settings.oauth_grant_type,
+    payload = {"grant_type": effective_grant_type,
                "client_id": "MAX",
                "scope": "widgetcli",
                "username": user,
