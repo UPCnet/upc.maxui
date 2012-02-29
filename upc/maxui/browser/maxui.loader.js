@@ -14,6 +14,7 @@ window._MAXUI.onReady = function() {
                 'username' : _MAXUI.username,
                 'oAuthToken' : _MAXUI.oauth_token,
                 'maxServerURL' : _MAXUI.max_server,
+                'maxServerURLAlias' : _MAXUI.max_server_alias,
                 'avatarURLpattern' : _MAXUI.avatar_url,
                 'activitiesSource' : 'activities',
                 'contextFilter' : _MAXUI.contexts,
