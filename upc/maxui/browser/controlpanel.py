@@ -60,6 +60,14 @@ class IMAXUISettings(Interface):
         default=DEFAULT_MAX_SERVER
         )
 
+    max_server_alias = schema.ASCIILine(
+        title=_(u'label_max_server_alias', default=u'MAX Server URL Alias (Fallback when no CORS available)'),
+        description=_(u'help_max_server_alias',
+                        default=u"Please, specify the MAX Server URL Alias."),
+        required=True,
+        default=DEFAULT_MAX_SERVER
+        )
+
     max_ops_username = schema.ASCIILine(
         title=_(u'label_max_ops_username', default=u'MAX operations agent username'),
         description=_(u'help_max_ops_username',
