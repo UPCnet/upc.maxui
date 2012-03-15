@@ -25,6 +25,11 @@
         file="max.ui.css"
         />
 
+    <browser:resource
+        name="maxcomm.png"
+        file="maxcomm.png"
+        />
+
     <browser:page
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         name="max_variables.js"
