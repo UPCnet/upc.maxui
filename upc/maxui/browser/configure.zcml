@@ -21,6 +21,11 @@
         />
 
     <browser:resource
+        name="bgact.gif"
+        file="bgact.gif"
+        />
+
+    <browser:resource
         name="max.ui.css"
         file="max.ui.css"
         />
@@ -28,6 +33,21 @@
     <browser:resource
         name="maxcomm.png"
         file="maxcomm.png"
+        />
+
+    <browser:resource
+        name="transparent.gif"
+        file="transparent.gif"
+        />
+
+    <browser:resource
+        name="maxcomm@2x.png"
+        file="maxcomm@2x.png"
+        />
+
+    <browser:resource
+        name="x.png"
+        file="x.png"
         />
 
     <browser:page

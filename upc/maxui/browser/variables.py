@@ -17,7 +17,7 @@ window._MAXUI.max_server = '%(max_server)s';
 window._MAXUI.max_server_alias = '%(max_server_alias)s';
 window._MAXUI.avatar_url = '%(avatar_url)s';
 window._MAXUI.profile_url = '%(profile_url)s'
-window._MAXUI.contexts = %(contexts)s;
+window._MAXUI.contexts = '%(contexts)s';
 """
 
 FORM_MODIFIED = _(u'text_form_modified_message',
@@ -68,5 +68,5 @@ class MAXJSVariables(BrowserView):
             max_server_alias=settings.max_server_alias,
             avatar_url='%s/avatar/{0}' % (self.context.absolute_url()),
             profile_url='%s/author/{0}' % (self.context.absolute_url()),
-            contexts=str([self.context.absolute_url()])
+            contexts=self.context.absolute_url()
         )
