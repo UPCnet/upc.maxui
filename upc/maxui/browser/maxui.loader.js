@@ -7,16 +7,16 @@
 */
 
 
-literals_ca = {'new_activity_text': 'Escriu alguna cosa ...',
-               'new_activity_post': "Publica",
-               'toggle_comments': "Comentaris",
-               'new_comment_post': "Comenta",
-               'new_comment_post': "Post comment",
-               'load_more': "Carrega'n més",
-               'context_published_in': "Publicat a",
-               'generator_via': "via",
-               'search_text': "Cerca..."
-             }
+literals_ca = {'new_activity_text': 'Escriu alguna cosa...',
+                       'new_activity_post': "Publica",
+                       'toggle_comments': "Comentaris",
+                       'new_comment_text': "Comenta alguna cosa...",
+                       'new_comment_post': "Comenta",
+                       'load_more': "Carrega'n més",
+                       'context_published_in': "Publicat a",
+                       'generator_via': "via",
+                       'search_text': "Busca..."
+        }
 
 if (!window._MAXUI) {window._MAXUI = {}; }
 window._MAXUI.onReady = function() {
