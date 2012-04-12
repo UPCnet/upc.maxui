@@ -7,27 +7,15 @@
 */
 
 
-literals_ca = {'new_activity_text': 'Escriu alguna cosa...',
-                       'new_activity_post': "Publica",
-                       'toggle_comments': "Comentaris",
-                       'new_comment_text': "Comenta alguna cosa...",
-                       'new_comment_post': "Comenta",
-                       'load_more': "Carrega'n més",
-                       'context_published_in': "Publicat a",
-                       'generator_via': "via",
-                       'search_text': "Busca..."
-        }
-
 if (!window._MAXUI) {window._MAXUI = {}; }
 window._MAXUI.onReady = function() {
     // This is called when the code has loaded.
-    settings = {'literals' : literals_ca,
+    settings = {'language' : 'ca',
                 'username' : _MAXUI.username,
                 'oAuthToken' : _MAXUI.oauth_token,
                 'maxServerURL' : _MAXUI.max_server,
                 'maxServerURLAlias' : _MAXUI.max_server_alias,
                 'avatarURLpattern' : _MAXUI.avatar_url,
-                'profileURLpattern' : _MAXUI.profile_url,
                 'readContext' : _MAXUI.contexts,
                 'activitySource': 'activities'
                }
